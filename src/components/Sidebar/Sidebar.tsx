@@ -18,7 +18,7 @@ const Sidebar = () => {
           ))}
         </div>
         <Button 
-          className="w-full rounded-3xl font-semibold bg-red-600 text-white p-6"
+          className="w-full rounded-3xl font-semibold text-lg bg-red-600 text-white p-6"
         >
           NEW POST
         </Button>
