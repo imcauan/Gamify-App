@@ -3,7 +3,8 @@ import FormInput from "@/components/FormInput";
 import Logo from "@/components/common/Logo";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import useAuthContext from "@/hooks/useAuthContext";
+import { UserEntity } from "@/entities/UserEntity";
+import { api } from "@/services/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -22,10 +23,9 @@ const formSchema = z.object({
   }),
 });
 
-type signUpData = z.infer<typeof formSchema>;
+type signInData = z.infer<typeof formSchema>;
 
 const Page = () => {
-  const { signIn, isAuthenticated } = useAuthContext();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,13 +35,22 @@ const Page = () => {
     },
   });
 
-  const onSubmit = async (data: signUpData) => {
-    signIn(data.email, data.password);
-
-    console.log(isAuthenticated, "isAuthenticated");
-
-    if (isAuthenticated) {
-      router.push(`/dashboard`);
+  const onSubmit = async (user: signInData) => {
+    try {
+      const getUser = await api
+        .post<UserEntity>("/user/signin",
+          {
+            email: user.email,
+            password: user.password
+          }
+        )
+        .then((res) => res.data);
+        if(!getUser) {
+          throw Error("The email or the password must be wrong.")
+        } 
+        router.push(`/dashboard`);
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -57,12 +66,12 @@ const Page = () => {
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormInput form={form} name="email" label="Email:" />
-          <FormInput form={form} name="password" label="Password:" />
+          <FormInput form={form} name="password" label="Password:" type="password" />
           <Button
             type="submit"
             className="w-full rounded-3xl font-semibold text-lg bg-red-600 text-white p-6 mt-4 hover:bg-red-800"
           >
-            SIGN UP
+            LOGIN
           </Button>
         </form>
       </Form>

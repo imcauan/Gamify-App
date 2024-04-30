@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "@/services/api";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   username: z.string().max(100, {
@@ -28,8 +29,9 @@ const formSchema = z.object({
 type signUpData = z.infer<typeof formSchema>;
 
 const Page = () => {
+  const { toast } = useToast();
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<signUpData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
@@ -38,21 +40,26 @@ const Page = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: signUpData) => {
     const userData = await api
-      .post("/auth/signup", {
-        email: values.email,
-        username: values.username,
-        password: values.password,
-      })
+      .post("/user/signup", 
+        {
+          username: values.username,
+          email: values.email,
+          password: values.password
+        },
+      )
       .then((res) => res.data);
 
-    if (userData) {
-      router.push("/auth/signin");
-    } else {
-      throw Error("Something went wrong while creating user.");
+    if (!userData) {
+      toast({
+        content: "Something went wrong while creating user!"
+      })
     }
+
+    router.push("/auth/signin");
   };
+
 
   return (
     <div className="flex justify-center items-center w-full h-screen bg-slate-950 gap-2 py-14">
@@ -68,9 +75,22 @@ const Page = () => {
             className="flex flex-col w-full gap-2 p-4 :px-12"
             onSubmit={form.handleSubmit(onSubmit)}
           >
-            <FormInput form={form} name="username" label="Username:" />
-            <FormInput form={form} name="email" label="Email:" />
-            <FormInput form={form} name="password" label="Password:" />
+            <FormInput 
+             form={form} 
+             name="username" 
+             label="Username:" 
+            />
+            <FormInput 
+             form={form} 
+             name="email" 
+             label="Email:" 
+            />
+            <FormInput 
+             form={form} 
+             name="password" 
+             label="Password:" 
+             type="password"
+            />
             <Button
               type="submit"
               className="w-full rounded-3xl font-semibold text-lg bg-red-600 text-white p-6 mt-4 hover:bg-red-800"
