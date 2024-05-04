@@ -7,7 +7,7 @@ const Logo = ({ ...props }: LogoProps) => {
     <div>
        <h1 
        {...props }
-       className="font-bold text-3xl text-white mt-6"
+       className="font-bold text-xl text-white"
        >
         GAMIFY
         </h1>

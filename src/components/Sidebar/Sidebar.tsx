@@ -1,3 +1,4 @@
+import NavProfile from "../NavProfile/NavProfile"
 import Logo from "../common/Logo"
 import { Button } from "../ui/button"
 import Navlink from "./Navlink"
@@ -5,8 +6,13 @@ import { links } from "./links"
 
 const Sidebar = () => {
   return (
-    <aside className="max-w-96 h-full bg-zinc-950 flex flex-col items-center gap-5 px-4 py-5">
-        <Logo />
+    <aside className="max-w-96 h-full bg-zinc-950 hidden flex-col items-center gap-5 px-4 py-5 lg:flex">
+        <div className="flex">
+          <Logo />
+          <NavProfile 
+           imageUrl="/vercel.svg"
+           />
+         </div>
         <div className="flex flex-col gap-8 w-full p-4">
           { links.map(link => (
               <Navlink 
