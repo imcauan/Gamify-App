@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "@/services/api";
 import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 const formSchema = z.object({
   username: z.string().max(100, {
@@ -42,24 +43,20 @@ const Page = () => {
 
   const onSubmit = async (values: signUpData) => {
     const userData = await api
-      .post("/user/signup", 
-        {
-          username: values.username,
-          email: values.email,
-          password: values.password
-        },
-      )
+      .post("/user/signup", {
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      })
       .then((res) => res.data);
 
     if (!userData) {
       toast({
-        content: "Something went wrong while creating user!"
-      })
+        description: "Something went wrong while creating user!",
+      });
     }
-
     router.push("/auth/signin");
   };
-
 
   return (
     <div className="flex justify-center items-center w-full h-screen bg-slate-950 gap-2 py-14">
@@ -75,21 +72,13 @@ const Page = () => {
             className="flex flex-col w-full gap-2 p-4 :px-12"
             onSubmit={form.handleSubmit(onSubmit)}
           >
-            <FormInput 
-             form={form} 
-             name="username" 
-             label="Username:" 
-            />
-            <FormInput 
-             form={form} 
-             name="email" 
-             label="Email:" 
-            />
-            <FormInput 
-             form={form} 
-             name="password" 
-             label="Password:" 
-             type="password"
+            <FormInput form={form} name="username" label="Username:" />
+            <FormInput form={form} name="email" label="Email:" />
+            <FormInput
+              form={form}
+              name="password"
+              label="Password:"
+              type="password"
             />
             <Button
               type="submit"
@@ -99,6 +88,7 @@ const Page = () => {
             </Button>
           </form>
         </Form>
+        <Toaster />
         <Link href="/auth/signin" className="text-white ">
           Do you have an account?{" "}
           <span className="text-red-600 font-bold text-base">Login</span>
