@@ -1,22 +1,23 @@
-import { ProfileEntity } from "@/entities/ProfileEntity"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { User } from "lucide-react"
+import { ProfileEntity } from "@/entities/ProfileEntity";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { User } from "lucide-react";
+import UserDropdown from "../common/UserDropdown/UserDropdown";
 
 interface ProfileProps {
-    imageUrl?: string
+  avatarUrl: string;
 }
 
-const NavProfile = ({ imageUrl }: ProfileProps) => {
+const NavProfile = ({ avatarUrl }: ProfileProps) => {
   return (
     <div>
       <Avatar>
-        <AvatarImage src={imageUrl} className="bg-white" />
+        {avatarUrl}
         <AvatarFallback>
           <User />
         </AvatarFallback>
       </Avatar>
     </div>
-  )
-}
+  );
+};
 
-export default NavProfile
+export default NavProfile;
