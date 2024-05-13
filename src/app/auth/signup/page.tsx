@@ -1,5 +1,5 @@
 "use client";
-import FormInput from "@/components/FormInput";
+import FormInput from "@/components/common/FormInput/FormInput";
 import Logo from "@/components/common/Logo";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
