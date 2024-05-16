@@ -6,8 +6,8 @@ import {
     FormLabel, 
     FormControl, 
     FormMessage 
-} from "./ui/form";
-import { Input } from "./ui/input";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
 
 interface FormInputProps<T extends FieldValues>
   extends Omit<ComponentPropsWithRef<"input">, "form"> {

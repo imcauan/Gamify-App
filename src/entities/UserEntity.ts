@@ -1,3 +1,5 @@
+import { PostEntity } from "./PostEntity"
+
 export interface UserEntity {
     id: string,
     username: string,
@@ -5,4 +7,7 @@ export interface UserEntity {
     email: string,
     avatarUrl?: string,
     bio?: string
+    posts: PostEntity[]
+    following: []
+    followers: []
 }

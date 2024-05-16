@@ -3,7 +3,7 @@ import Link, { LinkProps } from "next/link"
 import { usePathname } from "next/navigation"
 
 interface NavLinkProps extends LinkProps {
-    title: string,
+    title?: string,
     Icon?: LucideIcon,
 }
 
@@ -11,7 +11,7 @@ const Navlink = ({ title, Icon, href }: NavLinkProps) => {
   return (
     <Link
       href={href}
-      className="flex gap-4 text-white w-full font-medium text-xl hover:text-red-600"
+      className="flex justify-center text-white w-full font-medium text-xl hover:text-red-600 lg:gap-4 lg:justify-start"
     >
         {Icon !== undefined && <Icon />}
         {title}

@@ -16,7 +16,7 @@ interface PostProps {
 const PostCard = (props: PostProps) => {
   const [isFollowing, setIsFollowing] = useState(false);
   return (
-    <div className="flex flex-col gap-3 mt-4 space-y-2">
+    <div className="flex flex-col gap-3 mt-4 space-y-2 p-4">
         <div className="flex w-full justify-between">
             <div className="flex text-white items-center gap-3">
               <ProfilePicture avatarUrl={props.author.avatarUrl}/>
@@ -24,7 +24,7 @@ const PostCard = (props: PostProps) => {
             </div>
             <Button 
               onClick={() => setIsFollowing(!isFollowing)}
-              className="font-bold text-base bg-red-600 text-white rounded-xl"
+              className="font-bold text-base bg-red-600 text-white rounded-xl hover:bg-red-800"
             >
               { !isFollowing ? "Follow" : "Following" }
             </Button>

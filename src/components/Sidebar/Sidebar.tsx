@@ -7,7 +7,7 @@ import { links } from "./links"
 const Sidebar = () => {
   return (
     <aside className="max-w-96 h-full bg-zinc-950 hidden flex-col items-center gap-5 px-4 py-5 lg:flex">
-        <div className="flex">
+        <div className="w-full flex gap-4 justify-between px-4 items-center">
           <Logo />
           <NavProfile 
            imageUrl="/vercel.svg"

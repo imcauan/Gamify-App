@@ -8,8 +8,9 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
-  user: UserEntity;
+  user: UserEntity | null;
   signIn: (email: string, password: string) => Promise<void>;
+  signUp: (username: string, email: string, password: string) => Promise<void>
   signOut: () => void;
   me: () => Promise<void>;
 }
@@ -18,21 +19,31 @@ export const AuthContext = createContext<AuthContextProps>(
   {} as AuthContextProps
 );
 
+type TAuthToken = {
+  accessToken: string
+}
+let firstAccess: boolean;
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserEntity | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
-  let firstAccess: boolean;
 
-  type TAuthToken = {
-    accessToken: string
+  const signUp = async (username: string, email: string, password: string) => {
+    const userData = await api
+    .post("/user/signup", {
+      username,
+      email,
+      password,
+    })
+    .then((res) => res.data);
+    router.push("/auth/signin");
   }
 
   const signIn = async (email: string, password: string) => {
     if(!email || !password) {
       return;
     }
-
     try {
       const response = await api
         .post<TAuthToken>("/user/signin", {
@@ -46,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           return;
         }
         
-        firstAccess = true;
+        firstAccess = true
 
         useEffect(() => {
           me();
@@ -85,7 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, signOut, signIn, me }}
+      value={{ user, isAuthenticated, signOut, signIn, me, signUp }}
     >
       {children}
     </AuthContext.Provider>
