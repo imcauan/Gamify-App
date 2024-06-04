@@ -3,30 +3,29 @@
 import { UserEntity } from "@/entities/UserEntity";
 import { api } from "@/services/api";
 import { useRouter } from "next/navigation";
-import { ReactNode, createContext, useEffect, useState } from "react";
-
+import React from "react";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
-  user: UserEntity | null;
+  user: UserEntity | undefined;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (username: string, email: string, password: string) => Promise<void>
   signOut: () => void;
   me: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextProps>(
+export const AuthContext = React.createContext<AuthContextProps>(
   {} as AuthContextProps
 );
 
 type TAuthToken = {
-  accessToken: string
+  token: string
 }
 let firstAccess: boolean;
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserEntity | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = React.useState<UserEntity | undefined>();
+  const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
   const router = useRouter();
 
   const signUp = async (username: string, email: string, password: string) => {
@@ -41,6 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const signIn = async (email: string, password: string) => {
+    console.log({ email, password });
     if(!email || !password) {
       return;
     }
@@ -51,20 +51,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           password
         })
         .then((res) => res.data);
-        const accessToken = localStorage.setItem("accessToken", response.accessToken);
+        const accessToken = localStorage.setItem("accessToken", response.token);
 
         if(!response) {
+          router.push("/auth/signin")
           return;
         }
         
         firstAccess = true
+        me();
 
-        useEffect(() => {
-          me();
-        }, [])
-        
     } catch (error) {
-      console.log(error);
     };
   }
 
@@ -77,23 +74,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const response = await api.get<UserEntity>("/user/me", {
       headers: {
-        "accessToken": accessToken
+        Authorization: `Bearer ${accessToken}`,
       }}
-    );
+    )
+
+
     if(!response) {
       router.push("/auth/signin")
-      return;
+      throw Error("Request for get user data wasn't completed.")      
     }
-    const userData = response.data;
-    setUser(userData);
+    
+    setUser(response.data);
     setIsAuthenticated(true);
+
     firstAccess && router.push("/home");
   };
 
   const signOut = async () => {
     await api.post("/auth/logout");
-    setUser(null);
+    setUser(undefined);
   };
+
+  React.useEffect(() => {
+    me();
+  }, [])
+
   return (
     <AuthContext.Provider
       value={{ user, isAuthenticated, signOut, signIn, me, signUp }}
