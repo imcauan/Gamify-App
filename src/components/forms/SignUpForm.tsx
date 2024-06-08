@@ -17,8 +17,7 @@ const formSchema = z.object({
     .string()
     .max(100, {
       message: "Email cannot be bigger than 100 characters.",
-    })
-    .email(),
+    }).email(),
   password: z.string().max(100, {
     message: "Password cannot be bigger than 100 characters.",
   }),
@@ -39,7 +38,7 @@ export const SignUpForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await signUp(values.email, values.username, values.password)
+    await signUp(values.username, values.email, values.password)
     
     if(!signUp) {
       return;

@@ -3,11 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput  from "../common/FormInput/FormInput";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Logo from "../common/Logo";
+import { Form } from "../ui/form";
 
 const formSchema = z.object({
   email: z
@@ -37,8 +38,10 @@ export const SignInForm = () => {
     await signIn(values.email, values.password);
 
     if (!signIn) {
+      router.push("/auth/signin")
       return;
     }
+
     router.push("/home");
   };
 

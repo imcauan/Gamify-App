@@ -5,10 +5,10 @@ import { Button } from "../ui/button";
 import { PostEntity } from "@/entities/PostEntity";
 import { Form } from "../ui/form";
 import * as z from "zod";
-import useUserContext from "@/hooks/useUserContext";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePostContext } from "@/hooks/usePostContext";
 
 const formSchema = z.object({
   caption: z.string().max(600, { message: "Character limit reached." }),
@@ -22,7 +22,7 @@ const formSchema = z.object({
 
 const CreatePostForm = () => {
   const [image, setImage] = React.useState<File | null>(null);
-  const { createPost } = useUserContext();
+  const { createPost } = usePostContext();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
