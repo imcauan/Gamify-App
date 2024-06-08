@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { UserProvider } from "@/contexts/UserContext";
 import React from "react";
+import { PostProvider } from "@/contexts/PostContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
           <body className={inter.className}>
             <AuthProvider>
               <UserProvider>
-                 {children}
+                <PostProvider>
+                   { children }
+                </PostProvider>
               </UserProvider>
             </AuthProvider>
           </body>
