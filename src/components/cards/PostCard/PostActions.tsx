@@ -35,7 +35,7 @@ const PostActions = ({post}: PostActionsProps) => {
           onClick={handleLike} 
         />
         <span className='text-white'>{likes.length}</span>
-        <Link href={`/post/${post.id}/commentaries`}>
+        <Link href={`/post/commentaries/${post.id}`}>
           <MessageCircle className="text-white" onClick={handleCommentary} />
         </Link>
         <span className='text-white'>{post.commentaries.length}</span>

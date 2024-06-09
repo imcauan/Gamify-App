@@ -1,7 +1,7 @@
-import { Avatar, AvatarFallback } from "../ui/avatar"
+import { Avatar, AvatarFallback } from "../../ui/avatar"
 import { User } from "lucide-react"
 import useAuthContext from "@/hooks/useAuthContext"
-import { Button } from "../ui/button"
+import { Button } from "../../ui/button"
 import { PostEntity } from "@/entities/PostEntity"
 import { UserEntity } from "@/entities/UserEntity"
 
