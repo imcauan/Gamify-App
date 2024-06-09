@@ -6,7 +6,7 @@ interface ScreenProps extends ComponentPropsWithRef<"div"> {}
 const Screen = (props: ScreenProps) => {
   return (
     <div { ...props } 
-      className={cn("bg-black w-full h-screen flex flex-col overflow-auto", props.className)}
+      className={cn("bg-black w-full h-screen flex flex-col overflow-auto lg:flex-row", props.className)}
     >
        { props.children }
     </div>
