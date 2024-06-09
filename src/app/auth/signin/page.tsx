@@ -3,7 +3,9 @@ import { SignInForm } from "@/components/forms/SignInForm";
 
 const Page = () => {
   return (
-    <SignInForm />
+    <>
+     <SignInForm />
+    </>
   );
 };
 

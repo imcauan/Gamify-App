@@ -7,7 +7,7 @@ interface FormTextareaProps<T extends FieldValues>
 extends Omit<ComponentPropsWithRef<"textarea">, "form"> {
     name: Path<T>,
     form: UseFormReturn<T>,
-    label: string,
+    label?: string,
 }
 
 const FormTextarea = <T extends FieldValues>({

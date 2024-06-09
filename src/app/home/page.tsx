@@ -18,7 +18,7 @@ const Page = () => {
           <PostCard.Informations post={post} />
           <PostCard.Image image={post.image} />
           <PostCard.Caption caption={post.caption} />
-          <PostCard.Action />
+          <PostCard.Action post={post} />
         </PostCard.Root>
       ))}
         </div>

@@ -20,7 +20,7 @@ const PostInformations = ({ post }: PostInformationProps) => {
               <User />
             </AvatarFallback>
           </Avatar>
-        <p className="text-white font-semibold">{ post.author.username ?? "Nome do usuário" }</p>
+        <p className="text-white font-semibold">{ post.author.username }</p>
         </div>
         <p className="text-white text-sm">{ post.location }</p>
     </div>

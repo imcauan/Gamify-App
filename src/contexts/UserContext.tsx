@@ -1,46 +1,52 @@
-"use client"
+"use client";
 
 import { CommunityEntity } from "@/entities/CommunityEntity";
-import { PostEntity } from "@/entities/PostEntity"
-import { UserEntity } from "@/entities/UserEntity";
+import { PostEntity } from "@/entities/PostEntity";
+import useAuthContext from "@/hooks/useAuthContext";
 import { api } from "@/services/api";
-import { useRouter } from "next/router";
-import { ReactNode, createContext, useState } from "react";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 interface UserContextProps {
-    createPost: (file: File[], tags: string, caption: string, user: UserEntity) => void;
-    createCommunity: () => Promise<CommunityEntity | void>; 
-    followUser: () => void;
+  followUser: () => void;
 }
 
-export const UserContext = createContext(
-    {} as UserContextProps
-)
+export const UserContext = React.createContext({} as UserContextProps);
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const [isFollowing, setIsFollowinge] = useState(false);
-    // const router = useRouter();
-    const createPost = async (file: File[], tags: string, caption: string, user: UserEntity) => {
-        const newPost = await api
-        .post<PostEntity>("/new/post", {
-            user,
-            tags,
-            caption,
-            file
-        }).then((res) => res.data)
+export const UserProvider = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuthContext();
+  const router = useRouter();
 
-        user.posts.push(newPost);
-        // router.push("/home")
+  const createPost = async ({ location, caption, tags, image }: PostEntity) => {
+    
+    const postData = new FormData();
 
-        console.log("Post criado", newPost);
+    postData.append("caption", caption);
+    postData.append("location", location);
+    postData.append("tags", tags);
+    postData.append("image", image!);
+    postData.append("authorId", user?.id!);
+
+    const newPost = await api
+      .post<PostEntity>("/new/post", 
+        postData,
+      )
+      .then((res) => res.data);
+
+    if (!newPost) {
+      throw Error("Something went wrong while creating post.");
     }
 
-    const followUser = async () => {}
+    router.push("/home");
+    return newPost;
+  };
 
-    const createCommunity = async () => {}
-    return (
-        <UserContext.Provider value={{createPost, createCommunity, followUser}}>
-            { children }
-        </UserContext.Provider>
-    )
-}
+  const followUser = async () => {};
+
+  const createCommunity = async () => {};
+  return (
+    <UserContext.Provider value={{ followUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
