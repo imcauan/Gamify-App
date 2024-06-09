@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const signIn = async (email: string, password: string) => {
-    console.log({ email, password });
+    
     if(!email || !password) {
       return;
     }
@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsAuthenticated(true);
 
     firstAccess && router.push("/home");
+
   };
 
   const signOut = async () => {
