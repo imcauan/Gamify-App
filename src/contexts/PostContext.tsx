@@ -1,5 +1,6 @@
 "use client"
 
+import { CommentaryEntity } from "@/entities/CommentaryEntity";
 import { LikeEntity } from "@/entities/LikeEntity";
 import { PostEntity } from "@/entities/PostEntity";
 import useAuthContext from "@/hooks/useAuthContext";
@@ -12,6 +13,7 @@ interface PostContextProps {
     createPost: ({ location, caption, tags, image }: PostEntity) => Promise<PostEntity | void>;
     getPostById: (postId: string) => Promise<PostEntity | void>;
     getPosts: () => Promise<void>;
+    commentPost : ({ content }: { content: string}, postId: string, userId: string) => Promise<CommentaryEntity | void>;
     likePost: (authorId: string, postId: string) => Promise<LikeEntity | undefined>;
 }
 
@@ -21,7 +23,6 @@ export const PostContext = React.createContext(
 
 export const PostProvider = ({ children }: { children: React.ReactNode }) => {
     const [posts, setPosts] = React.useState<PostEntity[]>([]);
-    const [likes, setLikes] = React.useState<LikeEntity[]>([])
     const { user } = useAuthContext();
     const router = useRouter();
 
@@ -55,17 +56,17 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const getPostById = async (postId: string) => {
-        const post = await api.get<PostEntity>("/get/post", {
-            data: {
-                id: postId
-            }
-        })
+        console.log(postId);
+        const post = await api.post<PostEntity>("/get/post", {
+           postId,
+        }).then(res => res.data);
 
         if(!post) {
             return;
         }
+
+        return post
     }
-    // *TODO: Create post actions methods
     // "/new/commentary", "/edit/commentary/:id", "/delete/commentary/:id", and so on...
 
     const likePost = async (authorId: string, postId: string) => {
@@ -81,12 +82,31 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
         return response;
     }
 
+    const commentPost = async ({ content }: { content: string }, postId: string, userId: string) => {
+        try {
+          const CommentResponse = await api.post<CommentaryEntity>("/new/commentary", {
+             postId,
+             userId,
+             content
+          }).then(res => res.data);
+          
+        if(!CommentResponse) {
+            return;
+        }
+
+        return CommentResponse;
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     React.useEffect(() => {
         getPosts();
     }, []);
     
     return (
-        <PostContext.Provider value={{posts, createPost, getPosts, likePost, getPostById}}>
+        <PostContext.Provider value={{posts, createPost, getPosts, likePost, getPostById, commentPost}}>
             { children }
         </PostContext.Provider>
     )

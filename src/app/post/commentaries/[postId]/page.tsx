@@ -1,6 +1,7 @@
 "use client";
 
 import { CommentaryCard } from '@/components/cards/CommentaryCard';
+import CreateCommentForm from '@/components/forms/CreateCommentForm';
 import { CommentaryEntity } from '@/entities/CommentaryEntity';
 import { usePostContext } from '@/hooks/usePostContext';
 import { ArrowLeft } from 'lucide-react';
@@ -31,14 +32,14 @@ const Page = () => {
   }, [])
 
   return (
-    <>
+    <div className='flex flex-col h-full justify-between'>
        <div className="flex p-3 mt-1 gap-3">
           <Link className="text-white text-lg" href="/home">
             <ArrowLeft />
           </Link>
           <h1 className="text-white font-semibold text-xl">Commentaries ({commentaries?.length})</h1>
         </div>
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-3 h-full'>
           { commentaries?.length === 0 ? (
             <div className='flex h-screen items-center text-center'>
               <h1 className='text-white font-semibold text-sm'>No commentaries</h1>
@@ -53,9 +54,10 @@ const Page = () => {
                    username={comment.user.username}
                    />
               </CommentaryCard.Root>
-           )))}          
+           )))}
+           <CreateCommentForm postId={String(postId)}/>          
         </div>
-    </>
+    </div>
   )
 }
 
