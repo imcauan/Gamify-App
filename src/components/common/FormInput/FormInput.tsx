@@ -8,6 +8,7 @@ import {
     FormMessage 
 } from "../../ui/form";
 import { Input } from "../../ui/input";
+import { cn } from "@/lib/utils";
 
 interface FormInputProps<T extends FieldValues>
   extends Omit<ComponentPropsWithRef<"input">, "form"> {
@@ -31,7 +32,7 @@ const FormInput = <T extends FieldValues>({
           <FormLabel className="text-white">{ label }</FormLabel>
           <FormControl>
             <Input 
-              className="bg-zinc-900 border-none w-full text-white h-12"
+              className={cn("bg-zinc-900 border-none w-full text-white h-12", props.className)}
               {...field} 
               {...props}
             />

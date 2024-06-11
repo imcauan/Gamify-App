@@ -38,11 +38,11 @@ export const SignInForm = () => {
     await signIn(values.email, values.password);
 
     if (!signIn) {
-      router.push("/auth/signin")
       return;
     }
 
     router.push("/home");
+    router.refresh();
   };
 
   return (
