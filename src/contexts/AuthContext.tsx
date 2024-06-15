@@ -1,7 +1,9 @@
 "use client"
 
 import { UserEntity } from "@/entities/UserEntity";
+import { usePostContext } from "@/hooks/usePostContext";
 import { api } from "@/services/api";
+import { TokenService } from "@/services/token";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -25,6 +27,7 @@ let firstAccess: boolean;
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = React.useState<UserEntity | undefined>();
+  const { getPosts } = usePostContext();
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
   const router = useRouter();
 
@@ -55,11 +58,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         if(!response) {
           router.push("/auth/signin")
-          return;
         }
         
         firstAccess = true
         me();
+        getPosts();
 
     } catch (error) {
     };
@@ -94,6 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     await api.post("/auth/logout");
     setUser(undefined);
+    TokenService.removeToken();
   };
 
   React.useEffect(() => {
