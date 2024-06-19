@@ -11,7 +11,7 @@ interface DirectMessageImageProps {
 const DirectMessageImage = ({ user }: DirectMessageImageProps) => {
   return (
     <>
-      <Link href={`/user/directs/direct_messages/${user?.id}`}>
+      <Link href={`/user/directs/direct_messages?userId=${user?.id}`}>
         <Avatar>
           {user?.avatarUrl}
           <AvatarFallback>
