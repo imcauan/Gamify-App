@@ -1,10 +1,21 @@
+import Cookies from "js-cookie"
 export class TokenService {
-    static getToken() {
-        return localStorage.getItem("accessToken");
+    static readonly keyAccessToken = 'access_token_gamify'
+
+    static readonly saveAccessToken = (token: string) => {
+        return Cookies.set(this.keyAccessToken, token)
     }
 
-    static removeToken() {
-        return localStorage.removeItem("accessToken");
+    static getToken = ():string | undefined => {
+        return Cookies.get(this.keyAccessToken);
+    }
+
+    static readonly removeToken = () => {
+        return Cookies.remove(this.keyAccessToken);
+    }
+
+    static readonly hasAccessToken = () => {
+        return !!this.getToken();
     }
 }
 
