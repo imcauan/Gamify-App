@@ -10,7 +10,9 @@ const PostImage = ({ image }: PostImageProps) => {
       <img 
         src={`${process.env.NEXT_PUBLIC_BASE_URL}/uploads/${image}`}
         alt="Post image"
-        className="w-full rounded"
+        className="rounded"
+        width={500}
+        height={500}
       />
     </>
   )
