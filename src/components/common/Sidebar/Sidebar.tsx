@@ -1,18 +1,25 @@
-import NavProfile from "../../NavProfile/NavProfile"
+"use client";
+import NavProfile from "../NavProfile/NavProfile"
 import Logo from "../Logo"
 import Navlink from "./Navlink"
 import { links } from "./links"
+import useAuthContext from "@/hooks/useAuthContext"
+import { Send } from "lucide-react"
+import Link from "next/link"
 
 const Sidebar = () => {
+  const { user } = useAuthContext();
   return (
-    <aside className="max-w-96 bg-zinc-950 hidden flex-col items-center gap-4 left-0 sticky px-4 py-5 lg:flex w-full">
-        <div className="w-full flex gap-4 justify-between px-4 items-center">
-          <Logo />
+    <aside className="hidden flex-col w-80 left-0 sticky top-0 lg:flex justify-start gap-12 items-center overflow-hidden bg-zinc-950 rounded-r-xl rounded-br-xl">
+      <div className="w-full flex px-4 justify-between items-center">
+        <div className="flex gap-2 items-center mt-6">
           <NavProfile 
-           imageUrl="/vercel.svg"
-           />
-         </div>
-        <div className="flex flex-col gap-8 w-full p-4">
+            avatarUrl={user?.avatarUrl!}
+          />
+          <h1 className="text-white">{user?.username}</h1>
+        </div>
+      </div>
+        <div className="flex flex-col gap-8 w-full px-5 text-red-600">
           { links.map(link => (
               <Navlink 
                 key={link.title}

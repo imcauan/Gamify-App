@@ -13,8 +13,8 @@ const Navlink = ({ title, Icon, href }: NavLinkProps) => {
       href={href}
       className="flex justify-center text-white w-full font-medium text-xl hover:text-red-600 lg:gap-4 lg:justify-start"
     >
-        {Icon !== undefined && <Icon />}
-        {title}
+        {Icon !== undefined && <Icon className="text-red-600"/>}
+        <p className="text-white font-xs">{title}</p>
     </Link>
   )
 }
