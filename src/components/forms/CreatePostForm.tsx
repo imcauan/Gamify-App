@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePostContext } from "@/hooks/usePostContext";
+import { useMutation } from "@tanstack/react-query";
 
 const formSchema = z.object({
   caption: z.string().max(600, { message: "Character limit reached." }),
@@ -25,6 +26,11 @@ const CreatePostForm = () => {
   const { createPost } = usePostContext();
   const router = useRouter();
 
+  const { mutateAsync: createPostFn } = useMutation({
+    mutationKey: ['posts'],
+    mutationFn: createPost
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,7 +43,7 @@ const CreatePostForm = () => {
   const onSubmit = async ({ caption, location, tags }: PostEntity) => {
     console.log(caption, location, tags, image);
 
-    const newPost = await createPost({ caption, location, tags, image });
+    const newPost = await createPostFn({ caption, location, tags, image });
 
     console.log("Post criado");
 
@@ -59,7 +65,7 @@ const CreatePostForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="p-4 flex flex-col gap-3 h-full overflow-hidden">
+        <div className="p-4 flex flex-col gap-3 h-full w-full overflow-hidden">
           <FormTextarea
             form={form}
             label="Caption:"

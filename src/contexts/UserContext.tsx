@@ -1,6 +1,7 @@
 "use client";
 
 import { CommunityEntity } from "@/entities/CommunityEntity";
+import { MessageEntity } from "@/entities/MessageEntity";
 import { PostEntity } from "@/entities/PostEntity";
 import useAuthContext from "@/hooks/useAuthContext";
 import { api } from "@/services/api";
@@ -8,7 +9,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 interface UserContextProps {
-  followUser: () => void;
+  createMessage: (text: string, chatId: string) => Promise<MessageEntity | undefined>;
 }
 
 export const UserContext = React.createContext({} as UserContextProps);
@@ -16,6 +17,23 @@ export const UserContext = React.createContext({} as UserContextProps);
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuthContext();
   const router = useRouter();
+
+ async function createMessage(text: string, chatId: string): Promise<MessageEntity | undefined> {
+    try {
+      const MessageRequest = await api
+        .post<MessageEntity>("/new/message", {
+          authorId: user?.id!,
+          content: text,
+          chatId
+        })
+        .then((res) => res.data);
+  
+        return MessageRequest;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   const createPost = async ({ location, caption, tags, image }: PostEntity) => {
     
@@ -41,11 +59,10 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     return newPost;
   };
 
-  const followUser = async () => {};
 
   const createCommunity = async () => {};
   return (
-    <UserContext.Provider value={{ followUser }}>
+    <UserContext.Provider value={{ createMessage }}>
       {children}
     </UserContext.Provider>
   );

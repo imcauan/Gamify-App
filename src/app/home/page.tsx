@@ -10,6 +10,7 @@ import useAuthContext from "@/hooks/useAuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { getPosts } from "@/hooks/get-posts";
 import { MessageBar } from "@/components/common/MessageBar/MessageBar";
+import { PostEntity } from "@/entities/PostEntity";
 
 const Page = () => {
   const { data: posts } = useQuery({
@@ -20,9 +21,6 @@ const Page = () => {
   return (
     <div className="flex flex-col lg:flex-row">
       <div className="w-full lg:p-6 lg:flex lg:flex-col lg:gap-4">
-        <h1 className="hidden font-bold text-red-600 text-xl lg:flex mx-1">
-          Home Feed
-        </h1>
         <div className="flex flex-col w-full gap-4">
           {posts?.map((post) => (
             <PostCard.Root key={post.id} post={post}/>

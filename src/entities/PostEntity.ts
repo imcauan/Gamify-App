@@ -8,7 +8,8 @@ export interface PostEntity {
     image: File;
     location: string;
     tags: string;
-    author: UserEntity
-    likes: LikeEntity[]
-    commentaries: CommentaryEntity[]
+    author: UserEntity;
+    likes: LikeEntity[];
+    commentaries: CommentaryEntity[];
+    createdAt: Date;
 }

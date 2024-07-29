@@ -1,20 +1,46 @@
+"use client";
+
 import MessageCard from "@/components/cards/MessageCard/MessageCard";
 import NavProfile from "@/components/common/NavProfile/NavProfile";
-import CreateCommentForm from "@/components/forms/CreateCommentForm";
 import CreateMessageForm from "@/components/forms/CreateMessageForm";
+import { ChatEntity } from "@/entities/ChatEntity";
+import { MessageEntity } from "@/entities/MessageEntity";
+import { UserEntity } from "@/entities/UserEntity";
+import { useFetchChats } from "@/hooks/fetch-chats";
+import { fetchMessages } from "@/hooks/fetch-messages";
 import { useFetchUserById } from "@/hooks/get-users";
-import { ArrowLeft, CircleX } from "lucide-react";
+import { getChatById } from "@/hooks/getChatById";
+import useAuthContext from "@/hooks/useAuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { io } from "socket.io-client";
 
-const Page = async ({
+const socket = io("http://localhost:3333");
+
+// TODO: fix CSS and config socket.
+const Page = ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
+  const { user } = useAuthContext();
   const userId = searchParams["userId"] ?? "";
-  const { messages, username, avatarUrl } = await useFetchUserById(userId);
-  const filteredMessages = messages.filter((m) => m.destination === userId);
+  const chatId = searchParams["chatId"] ?? "";
+  const [currentUser, setCurrentUser] = React.useState<UserEntity | null>(null);
+  const { getAllChats } = useFetchChats();
+
+  const { data: messages } = useQuery({
+    queryKey: ["messages"],
+    queryFn: () => fetchMessages(chatId),
+  });
+
+  React.useEffect(() => {
+    if (!currentUser) {
+      useFetchUserById(userId).then((data) => setCurrentUser(data));
+    }
+  }, [currentUser]);
 
   return (
     <>
@@ -22,23 +48,27 @@ const Page = async ({
         <Link href={"/user/directs"}>
           <ArrowLeft className="text-white cursor-pointer hover:text-red-600" />
         </Link>
-        <NavProfile avatarUrl={avatarUrl ?? ""} />
-        <p className="text-sm text-white">{username}</p>
+        <NavProfile avatarUrl={currentUser?.avatarUrl ?? ""} />
+        <p className="text-sm text-white">{currentUser?.username}</p>
       </header>
-      <div className="w-full h-full flex flex-col justify-center items-center text-white">
-        {filteredMessages.length > 0 ? (
-          filteredMessages.map((m) => (
-            <MessageCard key={m.authorId} content={m.content} />
+      <div className="flex flex-col text-white">
+        {messages ? (
+          messages.map((x) => (
+            <MessageCard
+              key={x.id}
+              content={x.content}
+              className={
+                x.authorId === user?.id
+                  ? "right-0 text-right rounded"
+                  : "bg-zinc-850 left-0 text-left rounded"
+              }
+            />
           ))
         ) : (
-          <div className="flex flex-col gap-2 items-center">
-            <CircleX className="text-red-600 text-center text-md" />
-            <h1>No messages between you and {username}</h1>
-            <p className="text-zinc-800 text-sm font-medium">Start a conversation!</p>
-          </div>
+          <h1 className="text-white">No messages</h1>
         )}
       </div>
-      <CreateMessageForm userId={userId}/>
+      <CreateMessageForm chatId={String(chatId)} />
     </>
   );
 };

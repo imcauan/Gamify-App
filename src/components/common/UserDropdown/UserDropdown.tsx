@@ -6,7 +6,7 @@ import {
 } from "../../ui/dropdown-menu";
 import { dropLinks } from "./links";
 import Link from "next/link";
-import NavProfile from "../../NavProfile/NavProfile";
+import NavProfile from "../NavProfile/NavProfile";
 
 interface UserDropdownProps {
   avatarUrl: string;

@@ -15,6 +15,7 @@ interface PostContextProps {
     getPosts: () => Promise<void>;
     commentPost : ({ content }: { content: string}, postId: string, userId: string) => Promise<CommentaryEntity | void>;
     likePost: (authorId: string, postId: string) => Promise<void>;
+    savePost: (postId: string, userId: string) => Promise<void>;
 }
 
 export const PostContext = React.createContext(
@@ -111,7 +112,7 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const savePost = async (postId: string, userId: string) => {
-        const savePostResponse = await api.post(`/save/${postId}`, {
+        const savePostResponse = await api.post(`/save/post`, {
             postId,
             userId
         }).then(res => res.data);
@@ -119,13 +120,12 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
         if(!savePostResponse) {
             return;
         }
+
+        return savePostResponse
     }
-    React.useEffect(() => {
-        getPosts();
-    }, []);
-    
+
     return (
-        <PostContext.Provider value={{posts, createPost, getPosts, likePost, getPostById, commentPost, getCommentariesByPostId}}>
+        <PostContext.Provider value={{posts, createPost, getPosts, likePost, getPostById, commentPost, getCommentariesByPostId, savePost}}>
             { children }
         </PostContext.Provider>
     )

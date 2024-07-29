@@ -13,7 +13,7 @@ export function MessageBar() {
     queryFn: getAllChats,
   });
   return (
-    <div className="hidden lg:flex flex-col bg-zinc-950 text-white right-0 top-0 sticky w-80 rounded-l-xl rounded-bl-xl">
+    <div className="hidden lg:flex flex-col bg-zinc-950 text-white right-0 top-0 sticky min-w-80 rounded-l-xl rounded-bl-xl">
       <div className="w-full px-4 mt-6 text-left">
         <h1 className="text-red-600 font-bold text-xl">Directs</h1>
       </div>

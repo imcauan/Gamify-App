@@ -19,37 +19,27 @@ interface ILinks {
 export const links: ILinks[] = [
     {
         href: "/notifications",
-        title: "NOTIFICATIONS",
+        title: "Notifications",
         icon: BellRing,
     },
     {
         href: "/communities",
-        title: "YOUR COMMUNITIES",
+        title: "Communities",
         icon: Users
     },
     {
         href: "/saved_posts",
-        title: "SAVED POSTS",
+        title: "Saved posts",
         icon: Bookmark
     },
     {
-        href: "/live_games",
-        title: "LIVE GAMES",
-        icon: Radio
-    },
-    {
-        href: "/new/post",
-        title: "NEW POST",
-        icon: BadgePlus
-    },
-    {
         href: "/preferences",
-        title: "PREFERENCES",
+        title: "Preferences",
         icon: Settings
     },
     {
         href: "/logout",
-        title: "LOGOUT",
+        title: "Logout",
         icon: LogOut
     },
         ]

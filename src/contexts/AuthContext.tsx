@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           password
         })
         .then((res) => res.data);
-        const accessToken = localStorage.setItem("accessToken", response.token);
+        const accessToken = TokenService.saveAccessToken(response.token);
 
         if(!response) {
           router.push("/auth/signin")
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const me = async () => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = TokenService.getToken();
     if(!accessToken) {
       console.log("accessToken not found.");
       router.push("/auth/signin");
@@ -94,15 +94,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   };
 
+  React.useEffect(() => {
+    if(TokenService.hasAccessToken()) {
+      me();
+    }
+  }, [])
+  
   const signOut = async () => {
     await api.post("/auth/logout");
     setUser(undefined);
     TokenService.removeToken();
   };
-
-  React.useEffect(() => {
-    me();
-  }, [])
 
   return (
     <AuthContext.Provider

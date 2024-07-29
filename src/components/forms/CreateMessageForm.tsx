@@ -1,23 +1,26 @@
-"use client"
+"use client";
 
 import React from "react";
 import * as z from "zod";
 import { Form } from "../ui/form";
-import { Button } from "../ui/button";
-import { Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "../common/FormInput/FormInput";
 import { io } from "socket.io-client";
 import useAuthContext from "@/hooks/useAuthContext";
-import { api } from "@/services/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CreateMessage } from "@/hooks/create-message";
 import { MessageEntity } from "@/entities/MessageEntity";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { User } from "lucide-react";
 
 interface CreateMessageFormProps {
-  userId: string;
+  chatId: string;
 }
 
-const socket = io('http://localhost:3333');
+const socket = io("http://localhost:3333", {
+  withCredentials: true,
+});
 
 const formSchema = z.object({
   message: z
@@ -25,7 +28,23 @@ const formSchema = z.object({
     .min(1, { message: "Commentary needs at least 1 character" }),
 });
 
-export default function CreateMessageForm({ userId }: CreateMessageFormProps) {
+export default function CreateMessageForm({ chatId }: CreateMessageFormProps) {
+  const queryClient = useQueryClient();
+  const { mutateAsync: createMessageFn } = useMutation({
+    mutationFn: CreateMessage,
+    onSuccess(_, variables) {
+      const cached = queryClient.getQueryData(["messages"]);
+
+      queryClient.setQueryData(["messages"], (data) => {
+        return [
+          ...data,
+          {
+            content: variables.content,
+          },
+        ];
+      });
+    },
+  });
   const { user } = useAuthContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,40 +53,38 @@ export default function CreateMessageForm({ userId }: CreateMessageFormProps) {
     },
   });
 
-  async function handleSubmitMessage(message: { message: string }) {
-    try {
-     const MessageRequest = await api
-     .post<MessageEntity>("/new/message", {
-       content: message,
-       authorId: user?.id!,
-       destination: userId
-     });
-    } catch (error) {
-      console.log(error);
-    }
+  async function handleSubmitMessage({ message }: z.infer<typeof formSchema>) {
+    const messageReq = await createMessageFn({
+      content: message,
+      chatId,
+      authorId: user?.id!,
+    });
+    //  socket.emit('sendMessage', message)
   }
 
   return (
-    <div className="flex w-full sticky bottom-0 text-white p-4 gap-3">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(handleSubmitMessage)}
-          className="flex w-full justify-between items-end gap-2"
-        >
-          <FormInput
-            form={form}
-            name="message"
-            placeholder="Type your comment here"
-            className="bg-transparent border-none"
-          />
-          <Button
-            className="rounded bg-red-600 cursor-pointer hover:bg-red-700"
-            type="submit"
-          >
-            <Send className="text-white" />
-          </Button>
-        </form>
-      </Form>
+    <div className="flex w-full sticky bottom-0 text-white justify-start items-end h-full pb-4 px-4 rounded-tl-md rounded-tr-md lg:mb-0">
+      <Avatar>
+        { user?.avatarUrl }
+        <AvatarFallback>
+          <User className="text-white"/>
+        </AvatarFallback>
+      </Avatar>
+      <form
+        onSubmit={form.handleSubmit(handleSubmitMessage)}
+        className="flex w-full justify-between items-end gap-2"
+      >
+        <Form {...form}>
+          <div className="flex lg:block w-full justify-between">
+            <FormInput
+              form={form}
+              name="message"
+              placeholder="Type your comment here"
+              className="bg-transparent border-none"
+            />
+          </div>
+        </Form>
+      </form>
     </div>
   );
 }
