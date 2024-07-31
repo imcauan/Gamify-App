@@ -3,23 +3,16 @@
 import MessageCard from "@/components/cards/MessageCard/MessageCard";
 import NavProfile from "@/components/common/NavProfile/NavProfile";
 import CreateMessageForm from "@/components/forms/CreateMessageForm";
-import { ChatEntity } from "@/entities/ChatEntity";
-import { MessageEntity } from "@/entities/MessageEntity";
 import { UserEntity } from "@/entities/UserEntity";
 import { useFetchChats } from "@/hooks/fetch-chats";
 import { fetchMessages } from "@/hooks/fetch-messages";
 import { useFetchUserById } from "@/hooks/get-users";
-import { getChatById } from "@/hooks/getChatById";
 import useAuthContext from "@/hooks/useAuthContext";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, User } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { io } from "socket.io-client";
 
-const socket = io("http://localhost:3333");
-
-// TODO: fix CSS and config socket.
 const Page = ({
   searchParams,
 }: {
@@ -29,7 +22,6 @@ const Page = ({
   const userId = searchParams["userId"] ?? "";
   const chatId = searchParams["chatId"] ?? "";
   const [currentUser, setCurrentUser] = React.useState<UserEntity | null>(null);
-  const { getAllChats } = useFetchChats();
 
   const { data: messages } = useQuery({
     queryKey: ["messages"],
@@ -43,33 +35,35 @@ const Page = ({
   }, [currentUser]);
 
   return (
-    <>
-      <header className="w-full top-0 sticky p-2 gap-2 flex items-center lg:hidden my-2">
+    <div className="flex flex-col h-full justify-between w-full ">
+      <header className="w-full top-0 sticky p-2 gap-2 flex items-center my-2">
         <Link href={"/user/directs"}>
-          <ArrowLeft className="text-white cursor-pointer hover:text-red-600" />
+          <ArrowLeft className="text-white cursor-pointer hover:text-red-600 lg:hidden" />
         </Link>
         <NavProfile avatarUrl={currentUser?.avatarUrl ?? ""} />
         <p className="text-sm text-white">{currentUser?.username}</p>
       </header>
-      <div className="flex flex-col text-white">
+      <div className="flex flex-col h-full text-white lg:justify-start p-4 gap-3">
         {messages ? (
           messages.map((x) => (
-            <MessageCard
-              key={x.id}
-              content={x.content}
-              className={
-                x.authorId === user?.id
-                  ? "right-0 text-right rounded"
-                  : "bg-zinc-850 left-0 text-left rounded"
-              }
-            />
+            <div className={x.authorId === user?.id ? "flex justify-end" : "flex justify-start"}>
+              <MessageCard
+                key={x.id}
+                content={x.content}
+                className={
+                  x.authorId === user?.id
+                    ? "bg-red-600 text-right rounded p-2"
+                    : "bg-zinc-950 text-left rounded p-2"
+                }
+              />
+            </div>
           ))
         ) : (
           <h1 className="text-white">No messages</h1>
         )}
       </div>
       <CreateMessageForm chatId={String(chatId)} />
-    </>
+    </div>
   );
 };
 

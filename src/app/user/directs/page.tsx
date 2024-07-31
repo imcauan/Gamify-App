@@ -2,10 +2,7 @@
 
 import DirectMessageCard from "@/components/cards/DirectMessageCard/DirectMessageCard";
 import SearchInput from "@/components/common/SearchInput";
-import { ChatEntity } from "@/entities/ChatEntity";
-import { UserEntity } from "@/entities/UserEntity";
 import { useFetchChats } from "@/hooks/fetch-chats";
-import { useFetchUserById, useFetchUsers } from "@/hooks/get-users";
 import useAuthContext from "@/hooks/useAuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Bell, CircleX } from "lucide-react";
@@ -33,9 +30,6 @@ const Page = () => {
           </Link>
           <h1 className="text-lg text-white font-semibold">Directs</h1>
         </div>
-        <Link href={"/user/notifications"}>
-          <Bell className="text-white hover:text-red-600 cursor-pointer lg:hiddenl" />
-        </Link>
       </div>
       <div className="w-full px-4">
         <SearchInput

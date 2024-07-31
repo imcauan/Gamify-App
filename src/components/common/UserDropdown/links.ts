@@ -1,5 +1,3 @@
-import { Bell, Bookmark, LogOut, LucideIcon, Settings } from "lucide-react"
-
 interface DropLinkProps {
     name: string
     href: string

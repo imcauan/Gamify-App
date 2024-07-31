@@ -8,7 +8,7 @@ import { BadgePlus, Send } from "lucide-react"
 import Link from "next/link"
 
 const Sidebar = () => {
-  const { user } = useAuthContext();
+  const { user, signOut } = useAuthContext();
   return (
     <aside className="hidden flex-col min-w-80 left-0 sticky top-0 lg:flex justify-start gap-12 items-center overflow-hidden bg-zinc-950 rounded-r-xl rounded-br-xl">
       <div className="w-full flex px-4 justify-between items-center">
@@ -26,6 +26,7 @@ const Sidebar = () => {
                 href={link.href}
                 Icon={link.icon}
                 title={link.title}
+                onClick={signOut}
               /> 
           ))}
           <Link href={"/new/post"} className="flex gap-2 justify-center bg-red-600 rounded-full text-white text-center p-4 font-semibold hover:bg-red-800">

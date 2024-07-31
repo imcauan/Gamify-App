@@ -13,7 +13,7 @@ import { MessageBar } from "@/components/common/MessageBar/MessageBar";
 import { PostEntity } from "@/entities/PostEntity";
 
 const Page = () => {
-  const { data: posts } = useQuery({
+  const { data: posts, } = useQuery({
     queryKey: ["posts"],
     queryFn: getPosts,
   });

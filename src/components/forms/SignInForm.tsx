@@ -66,7 +66,7 @@ export const SignInForm = () => {
           />
           <Button
             type="submit"
-            className="w-full rounded-3xl font-semibold text-lg bg-red-600 text-white p-6 mt-4 hover:bg-red-800"
+            className="w-full rounded font-semibold text-lg bg-red-600 text-white p-6 mt-4 hover:bg-red-800"
           >
             SIGN IN
           </Button>

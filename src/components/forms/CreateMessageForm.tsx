@@ -18,14 +18,11 @@ interface CreateMessageFormProps {
   chatId: string;
 }
 
-const socket = io("http://localhost:3333", {
-  withCredentials: true,
-});
+const socket = io("http://localhost:3333");
 
 const formSchema = z.object({
   message: z
     .string()
-    .min(1, { message: "Commentary needs at least 1 character" }),
 });
 
 export default function CreateMessageForm({ chatId }: CreateMessageFormProps) {
@@ -35,13 +32,17 @@ export default function CreateMessageForm({ chatId }: CreateMessageFormProps) {
     onSuccess(_, variables) {
       const cached = queryClient.getQueryData(["messages"]);
 
-      queryClient.setQueryData(["messages"], (data) => {
-        return [
-          ...data,
-          {
-            content: variables.content,
-          },
-        ];
+      socket.on("received_message", (message) => {
+        queryClient.setQueryData(["messages"], (data: MessageEntity[]) => {
+          return [
+            ...data,
+            {
+              content: message.content,
+              chatId,
+              authorId: user?.id
+            },
+          ];
+        });
       });
     },
   });
@@ -54,20 +55,21 @@ export default function CreateMessageForm({ chatId }: CreateMessageFormProps) {
   });
 
   async function handleSubmitMessage({ message }: z.infer<typeof formSchema>) {
-    const messageReq = await createMessageFn({
+    socket.emit("message", message);
+
+    await createMessageFn({
       content: message,
       chatId,
       authorId: user?.id!,
     });
-    //  socket.emit('sendMessage', message)
   }
 
   return (
     <div className="flex w-full sticky bottom-0 text-white justify-start items-end h-full pb-4 px-4 rounded-tl-md rounded-tr-md lg:mb-0">
       <Avatar>
-        { user?.avatarUrl }
+        {user?.avatarUrl}
         <AvatarFallback>
-          <User className="text-white"/>
+          <User className="text-white" />
         </AvatarFallback>
       </Avatar>
       <form
@@ -79,7 +81,7 @@ export default function CreateMessageForm({ chatId }: CreateMessageFormProps) {
             <FormInput
               form={form}
               name="message"
-              placeholder="Type your comment here"
+              placeholder="Message"
               className="bg-transparent border-none"
             />
           </div>

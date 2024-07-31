@@ -5,16 +5,13 @@ import DirectMessageName from "./DirectMessageName";
 import DirectMessageText from "./DirectMessageText";
 import { useFetchChats } from "@/hooks/fetch-chats";
 import { ChatEntity } from "@/entities/ChatEntity";
-import useAuthContext from "@/hooks/useAuthContext";
 import { UserEntity } from "@/entities/UserEntity";
-import { useFetchUserById } from "@/hooks/get-users";
-
-interface DirectMessageCardProps {
-  chat: ChatEntity
-  user: UserEntity
+interface DirectMessageCardProps extends React.ComponentProps<"div">{
+  chat: ChatEntity;
+  user: UserEntity;
 }
 
-const DirectMessageCard = ({ chat, user }: DirectMessageCardProps) => {
+const DirectMessageCard = ({ chat, user, ...props }: DirectMessageCardProps) => {
   const [destinationUser, setDestinationUser] = React.useState<UserEntity | undefined>();
   const { fetchDestinationUserData } = useFetchChats();
 
@@ -25,7 +22,7 @@ const DirectMessageCard = ({ chat, user }: DirectMessageCardProps) => {
   }, [destinationUser])
 
   return (
-    <div className="flex w-full p-4 gap-3 cursor-pointer mt-4">
+    <div className="flex w-full p-4 gap-3 cursor-pointer mt-4" {...props}>
       <DirectMessageImage user={destinationUser!} chat={chat}/>
       <div className="flex flex-col">
         <DirectMessageName username={destinationUser?.username} />

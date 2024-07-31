@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { UserProvider } from "@/contexts/UserContext";
 import React from "react";
 import { PostProvider } from "@/contexts/PostContext";
 import QueryProvider from "@/providers/QueryProvider";
@@ -23,13 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <UserProvider>
             <PostProvider>
               <QueryProvider>
                 {children}
               </QueryProvider>
             </PostProvider>
-          </UserProvider>
         </AuthProvider>
       </body>
     </html>

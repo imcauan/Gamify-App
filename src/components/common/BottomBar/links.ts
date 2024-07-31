@@ -11,19 +11,7 @@ export const bottomLinks: BottomLinkProps[] = [
         href: "/home"
     },
     {
-        icon: Search,
-        href: "/search/"
-    },
-    {
         icon: BadgePlus,
         href: "/new/post"
-    },
-    {
-        icon: Radio,
-        href: "/live_games"
-    },
-    {
-        icon: Users,
-        href: "/communities",
     },
 ]

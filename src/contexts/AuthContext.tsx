@@ -101,7 +101,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [])
   
   const signOut = async () => {
-    await api.post("/auth/logout");
     setUser(undefined);
     TokenService.removeToken();
   };

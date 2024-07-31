@@ -8,14 +8,13 @@ import { Form } from "../ui/form";
 import { Button } from "../ui/button";
 import { Send, User } from "lucide-react";
 import useAuthContext from "@/hooks/useAuthContext";
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CreateCommentary from "@/hooks/create-commentary";
+import { CommentaryEntity } from "@/entities/CommentaryEntity";
 
 const formSchema = z.object({
   content: z
     .string()
-    .min(1, { message: "Commentary needs at least 1 character" }),
 });
 
 interface CreateCommentFormProps {
@@ -36,7 +35,7 @@ const CreateCommentForm = ({ postId }: CreateCommentFormProps) => {
     onSuccess(_, variables) {
       const cached = queryClient.getQueryData(["commentaries"]);
 
-      queryClient.setQueryData(["commentaries"], (data) => {
+      queryClient.setQueryData(["commentaries"], (data: CommentaryEntity[]) => {
         return [
           ...data,
           {

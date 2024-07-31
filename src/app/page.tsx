@@ -1,18 +1,14 @@
-import { CommentaryCard } from "@/components/cards/CommentaryCard";
-import { CommentaryContent } from "@/components/cards/CommentaryCard/CommentaryContent";
+import AnimatedButton from "@/components/common/AnimatedButton";
 import Screen from "@/components/common/Screen";
+import GridPattern from "@/components/magicui/grid-pattern";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 export default function Page() {
   return (
     <Screen>
-      <p className="text-white">Hello Gamify!</p>
-      <CommentaryCard.Root>
-        <CommentaryCard.Image avatarUrl="" />
-        <CommentaryContent 
-          content="Lorem ipsum dolor sit dor amet"
-          username="helixr6s"
-        />
-      </CommentaryCard.Root>
+     <h1 className="text-white">Hello world!</h1>
     </Screen>
   );
 }
