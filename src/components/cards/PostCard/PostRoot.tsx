@@ -15,10 +15,10 @@ const PostRoot = ({ post }: PostCardProps) => {
   });
 
   return (
-    <div className="w-full p-4 flex flex-col gap-3 lg:bg-zinc-950 lg:rounded-lg">
+    <div className="w-full p-4 flex flex-col gap-3 lg:bg-zinc-950 lg:rounded-lg md:justify-center">
       <PostCard.Informations post={post} />
       <PostCard.Image image={post.image} />
-      <PostCard.Caption caption={post.caption} />
+      <PostCard.Caption caption={post.caption} author={post?.author} />
       <PostCard.Action post={post} likes={likes ?? []}/>
     </div>
   );

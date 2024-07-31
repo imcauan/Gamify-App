@@ -9,7 +9,7 @@ import { MessageBar } from "@/components/common/MessageBar/MessageBar";
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Screen className="lg:flex lg:justify-between">
+    <Screen className="lg:flex flex-col lg:flex-row lg:justify-between">
       <Topbar />
       <Sidebar />
       {children}
